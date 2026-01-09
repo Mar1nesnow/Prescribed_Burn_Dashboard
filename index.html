@@ -219,62 +219,188 @@ const PrescribedBurnDashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Temperature Card */}
           <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-4">
               <Thermometer className="w-6 h-6 text-red-500" />
               <h3 className="font-semibold text-gray-700">Temperature</h3>
             </div>
-            <p className="text-3xl font-bold text-gray-800">
+            <p className="text-4xl font-bold text-gray-800 mb-4">
               {temp ? `${Math.round(temp)}°F` : 'N/A'}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            
+            {/* Visual Range Indicator */}
+            <div className="relative h-12 mb-2">
+              {/* Color gradient bar */}
+              <div className="absolute w-full h-8 rounded flex">
+                <div className="bg-red-500 h-full rounded-l" style={{width: '28%'}}></div>
+                <div className="bg-yellow-500 h-full" style={{width: '16%'}}></div>
+                <div className="bg-green-500 h-full" style={{width: '20%'}}></div>
+                <div className="bg-yellow-500 h-full" style={{width: '16%'}}></div>
+                <div className="bg-red-500 h-full rounded-r" style={{width: '20%'}}></div>
+              </div>
+              
+              {/* Current position marker */}
+              {temp && (
+                <div 
+                  className="absolute top-0 h-12 flex flex-col items-center"
+                  style={{left: `${Math.min(Math.max(((temp - 20) / 80) * 100, 0), 100)}%`, transform: 'translateX(-50%)'}}
+                >
+                  <div className="w-1 h-8 bg-gray-800"></div>
+                  <div className="w-4 h-4 bg-gray-800 rounded-full border-2 border-white"></div>
+                </div>
+              )}
+            </div>
+            
+            {/* Range labels */}
+            <div className="flex justify-between text-xs text-gray-600 mb-2">
+              <span>20°</span>
+              <span className="text-red-600 font-semibold">35°</span>
+              <span className="text-green-600 font-semibold">45°</span>
+              <span className="text-green-600 font-semibold">65°</span>
+              <span className="text-red-600 font-semibold">75°</span>
+              <span>100°</span>
+            </div>
+            <p className="text-xs text-gray-500">
               Dew point: {weatherData.dewpoint.value ? `${Math.round(celsiusToFahrenheit(weatherData.dewpoint.value))}°F` : 'N/A'}
             </p>
-            <p className="text-xs text-gray-400 mt-2">Ideal: 45-65°F</p>
           </div>
 
+          {/* Humidity Card */}
           <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-4">
               <Droplets className="w-6 h-6 text-blue-500" />
               <h3 className="font-semibold text-gray-700">Humidity</h3>
             </div>
-            <p className="text-3xl font-bold text-gray-800">
+            <p className="text-4xl font-bold text-gray-800 mb-4">
               {humidity ? `${Math.round(humidity)}%` : 'N/A'}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            
+            {/* Visual Range Indicator */}
+            <div className="relative h-12 mb-2">
+              {/* Color gradient bar */}
+              <div className="absolute w-full h-8 rounded flex">
+                <div className="bg-red-500 h-full rounded-l" style={{width: '20%'}}></div>
+                <div className="bg-yellow-500 h-full" style={{width: '5%'}}></div>
+                <div className="bg-green-500 h-full" style={{width: '30%'}}></div>
+                <div className="bg-yellow-500 h-full" style={{width: '5%'}}></div>
+                <div className="bg-red-500 h-full rounded-r" style={{width: '40%'}}></div>
+              </div>
+              
+              {/* Current position marker */}
+              {humidity && (
+                <div 
+                  className="absolute top-0 h-12 flex flex-col items-center"
+                  style={{left: `${Math.min(Math.max(humidity, 0), 100)}%`, transform: 'translateX(-50%)'}}
+                >
+                  <div className="w-1 h-8 bg-gray-800"></div>
+                  <div className="w-4 h-4 bg-gray-800 rounded-full border-2 border-white"></div>
+                </div>
+              )}
+            </div>
+            
+            {/* Range labels */}
+            <div className="flex justify-between text-xs text-gray-600 mb-2">
+              <span>0%</span>
+              <span className="text-red-600 font-semibold">20%</span>
+              <span className="text-green-600 font-semibold">25%</span>
+              <span className="text-green-600 font-semibold">55%</span>
+              <span className="text-red-600 font-semibold">60%</span>
+              <span>100%</span>
+            </div>
+            <p className="text-xs text-gray-500">
               Pressure: {weatherData.barometricPressure.value ? `${(weatherData.barometricPressure.value / 100).toFixed(1)} mb` : 'N/A'}
             </p>
-            <p className="text-xs text-gray-400 mt-2">Ideal: 25-55%</p>
           </div>
 
+          {/* Wind Card */}
           <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-4">
               <Wind className="w-6 h-6 text-teal-500" />
-              <h3 className="font-semibold text-gray-700">Wind</h3>
+              <h3 className="font-semibold text-gray-700">Wind Speed</h3>
             </div>
-            <p className="text-3xl font-bold text-gray-800">
+            <p className="text-4xl font-bold text-gray-800 mb-4">
               {windSpeed ? `${Math.round(windSpeed)} mph` : 'N/A'}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            
+            {/* Visual Range Indicator */}
+            <div className="relative h-12 mb-2">
+              {/* Color gradient bar */}
+              <div className="absolute w-full h-8 rounded flex">
+                <div className="bg-red-500 h-full rounded-l" style={{width: '10%'}}></div>
+                <div className="bg-yellow-500 h-full" style={{width: '10%'}}></div>
+                <div className="bg-green-500 h-full" style={{width: '25%'}}></div>
+                <div className="bg-yellow-500 h-full" style={{width: '12.5%'}}></div>
+                <div className="bg-red-500 h-full rounded-r" style={{width: '42.5%'}}></div>
+              </div>
+              
+              {/* Current position marker */}
+              {windSpeed && (
+                <div 
+                  className="absolute top-0 h-12 flex flex-col items-center"
+                  style={{left: `${Math.min(Math.max((windSpeed / 40) * 100, 0), 100)}%`, transform: 'translateX(-50%)'}}
+                >
+                  <div className="w-1 h-8 bg-gray-800"></div>
+                  <div className="w-4 h-4 bg-gray-800 rounded-full border-2 border-white"></div>
+                </div>
+              )}
+            </div>
+            
+            {/* Range labels */}
+            <div className="flex justify-between text-xs text-gray-600 mb-2">
+              <span>0</span>
+              <span className="text-red-600 font-semibold">3</span>
+              <span className="text-green-600 font-semibold">5</span>
+              <span className="text-green-600 font-semibold">15</span>
+              <span className="text-red-600 font-semibold">20</span>
+              <span>40 mph</span>
+            </div>
+            <p className="text-xs text-gray-500">
               Direction: {getWindDirection(windDirection)} ({windDirection ? `${Math.round(windDirection)}°` : 'N/A'})
             </p>
-            <p className="text-xs text-gray-400 mt-2">Ideal: 5-15 mph</p>
           </div>
 
+          {/* Visibility Card */}
           <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-4">
               <Eye className="w-6 h-6 text-purple-500" />
               <h3 className="font-semibold text-gray-700">Visibility</h3>
             </div>
-            <p className="text-3xl font-bold text-gray-800">
+            <p className="text-4xl font-bold text-gray-800 mb-4">
               {visibility ? `${visibility.toFixed(1)} mi` : 'N/A'}
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            
+            {/* Visual Range Indicator */}
+            <div className="relative h-12 mb-2">
+              {/* Color gradient bar */}
+              <div className="absolute w-full h-8 rounded flex">
+                <div className="bg-red-500 h-full rounded-l" style={{width: '20%'}}></div>
+                <div className="bg-yellow-500 h-full" style={{width: '10%'}}></div>
+                <div className="bg-green-500 h-full rounded-r" style={{width: '70%'}}></div>
+              </div>
+              
+              {/* Current position marker */}
+              {visibility && (
+                <div 
+                  className="absolute top-0 h-12 flex flex-col items-center"
+                  style={{left: `${Math.min(Math.max((visibility / 10) * 100, 0), 100)}%`, transform: 'translateX(-50%)'}}
+                >
+                  <div className="w-1 h-8 bg-gray-800"></div>
+                  <div className="w-4 h-4 bg-gray-800 rounded-full border-2 border-white"></div>
+                </div>
+              )}
+            </div>
+            
+            {/* Range labels */}
+            <div className="flex justify-between text-xs text-gray-600 mb-2">
+              <span>0 mi</span>
+              <span className="text-red-600 font-semibold">2</span>
+              <span className="text-green-600 font-semibold">3+</span>
+              <span>10 mi</span>
+            </div>
+            <p className="text-xs text-gray-500">
               {weatherData.textDescription || 'Clear'}
-            </p>
-            <p className="text-xs text-gray-400 mt-2">
-              Cloud cover: {weatherData.cloudLayers && weatherData.cloudLayers.length > 0 ? weatherData.cloudLayers[0].amount : 'Clear'}
             </p>
           </div>
         </div>
